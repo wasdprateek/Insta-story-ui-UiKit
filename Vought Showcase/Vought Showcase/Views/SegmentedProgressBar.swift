@@ -38,6 +38,15 @@ class SegmentedProgressBar: UIView {
         }
     }
     
+    var currentIndex: Int = 0 {
+        didSet {
+            if currentIndex < segments.count {
+                let segment = segments[currentIndex]
+                segment.topSegmentView.frame.size.width = segment.bottomSegmentView.frame.width
+            }
+        }
+    }
+    
     /// The padding between segments.
     var padding: CGFloat = 4.0
     

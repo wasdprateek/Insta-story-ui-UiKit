@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		300898832C9627D300822EF6 /* ButcherCarouselItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300898822C9627D300822EF6 /* ButcherCarouselItem.swift */; };
+		300898852C9628E300822EF6 /* FrenchieCarouselItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300898842C9628E300822EF6 /* FrenchieCarouselItem.swift */; };
+		300898892C9629AD00822EF6 /* HugheiCarouselItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300898882C9629AD00822EF6 /* HugheiCarouselItem.swift */; };
+		3008988B2C9629E900822EF6 /* MmCarouselItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3008988A2C9629E900822EF6 /* MmCarouselItem.swift */; };
+		3008988D2C962B3D00822EF6 /* TheBoysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3008988C2C962B3D00822EF6 /* TheBoysViewController.swift */; };
 		5E1E353D2C623996000D7DEF /* UIViewController+AddChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1E353C2C623996000D7DEF /* UIViewController+AddChild.swift */; };
 		5E1E353F2C6247C5000D7DEF /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1E353E2C6247C5000D7DEF /* ImageViewController.swift */; };
 		5E1E35422C6248A6000D7DEF /* CarouselItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1E35412C6248A6000D7DEF /* CarouselItem.swift */; };
@@ -48,6 +53,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		300898822C9627D300822EF6 /* ButcherCarouselItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButcherCarouselItem.swift; sourceTree = "<group>"; };
+		300898842C9628E300822EF6 /* FrenchieCarouselItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrenchieCarouselItem.swift; sourceTree = "<group>"; };
+		300898882C9629AD00822EF6 /* HugheiCarouselItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HugheiCarouselItem.swift; sourceTree = "<group>"; };
+		3008988A2C9629E900822EF6 /* MmCarouselItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MmCarouselItem.swift; sourceTree = "<group>"; };
+		3008988C2C962B3D00822EF6 /* TheBoysViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheBoysViewController.swift; sourceTree = "<group>"; };
 		5E1E353C2C623996000D7DEF /* UIViewController+AddChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+AddChild.swift"; sourceTree = "<group>"; };
 		5E1E353E2C6247C5000D7DEF /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		5E1E35412C6248A6000D7DEF /* CarouselItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselItem.swift; sourceTree = "<group>"; };
@@ -100,6 +110,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		300898862C96290F00822EF6 /* seven */ = {
+			isa = PBXGroup;
+			children = (
+				5E1E35432C62497D000D7DEF /* HomeLanderCarouselItem.swift */,
+				5E1E35452C624AB9000D7DEF /* MaeveCarouselItem.swift */,
+				5E1E35472C624B31000D7DEF /* BlackNoirCarouselItem.swift */,
+				5E1E35492C624BAB000D7DEF /* ATrainCarouselItem.swift */,
+			);
+			path = seven;
+			sourceTree = "<group>";
+		};
+		300898872C96297800822EF6 /* Boys */ = {
+			isa = PBXGroup;
+			children = (
+				300898822C9627D300822EF6 /* ButcherCarouselItem.swift */,
+				300898842C9628E300822EF6 /* FrenchieCarouselItem.swift */,
+				300898882C9629AD00822EF6 /* HugheiCarouselItem.swift */,
+				3008988A2C9629E900822EF6 /* MmCarouselItem.swift */,
+			);
+			path = Boys;
+			sourceTree = "<group>";
+		};
 		5E1E353B2C623954000D7DEF /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,10 +153,8 @@
 		5E1E354B2C624BF4000D7DEF /* CarouselItems */ = {
 			isa = PBXGroup;
 			children = (
-				5E1E35432C62497D000D7DEF /* HomeLanderCarouselItem.swift */,
-				5E1E35452C624AB9000D7DEF /* MaeveCarouselItem.swift */,
-				5E1E35472C624B31000D7DEF /* BlackNoirCarouselItem.swift */,
-				5E1E35492C624BAB000D7DEF /* ATrainCarouselItem.swift */,
+				300898872C96297800822EF6 /* Boys */,
+				300898862C96290F00822EF6 /* seven */,
 			);
 			path = CarouselItems;
 			sourceTree = "<group>";
@@ -215,6 +245,7 @@
 				5E87DC712C6232430005D86C /* MainViewController.swift */,
 				5E87DC732C6232430005D86C /* Main.storyboard */,
 				5E1E353E2C6247C5000D7DEF /* ImageViewController.swift */,
+				3008988C2C962B3D00822EF6 /* TheBoysViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -352,16 +383,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E1E35442C62497D000D7DEF /* HomeLanderCarouselItem.swift in Sources */,
+				300898892C9629AD00822EF6 /* HugheiCarouselItem.swift in Sources */,
 				5E87DCA02C6236A30005D86C /* CarouselViewController.swift in Sources */,
 				5E87DC722C6232430005D86C /* MainViewController.swift in Sources */,
+				3008988B2C9629E900822EF6 /* MmCarouselItem.swift in Sources */,
 				5E1E35482C624B31000D7DEF /* BlackNoirCarouselItem.swift in Sources */,
 				5E1E354A2C624BAB000D7DEF /* ATrainCarouselItem.swift in Sources */,
 				5E87DC6E2C6232430005D86C /* AppDelegate.swift in Sources */,
+				300898852C9628E300822EF6 /* FrenchieCarouselItem.swift in Sources */,
 				5E1E35462C624AB9000D7DEF /* MaeveCarouselItem.swift in Sources */,
 				5E1E354F2C624C2A000D7DEF /* CarouselItemDataSourceProviderType.swift in Sources */,
 				5E1E353D2C623996000D7DEF /* UIViewController+AddChild.swift in Sources */,
 				5E1E35512C624C4D000D7DEF /* CarouselItemDataSourceProvider.swift in Sources */,
 				5E1E35422C6248A6000D7DEF /* CarouselItem.swift in Sources */,
+				3008988D2C962B3D00822EF6 /* TheBoysViewController.swift in Sources */,
+				300898832C9627D300822EF6 /* ButcherCarouselItem.swift in Sources */,
 				5E1E353F2C6247C5000D7DEF /* ImageViewController.swift in Sources */,
 				5E87DC702C6232430005D86C /* SceneDelegate.swift in Sources */,
 				5E1E35572C634D75000D7DEF /* SegmentedProgressBar.swift in Sources */,

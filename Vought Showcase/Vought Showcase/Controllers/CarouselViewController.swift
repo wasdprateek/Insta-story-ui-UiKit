@@ -13,13 +13,9 @@ final class CarouselViewController: UIViewController {
     
     /// Container view for the carousel
     @IBOutlet private weak var containerView: UIView!
-    
-    /// Carousel control with page indicator
-    @IBOutlet private weak var carouselControl: UIPageControl!
-
+    private var segmentedProgressBar: SegmentedProgressBar?
 
     /// Page view controller for carousel
-    private var pageViewController: UIPageViewController?
     
     /// Carousel items
     private var items: [CarouselItem] = []
@@ -28,7 +24,7 @@ final class CarouselViewController: UIViewController {
     private var currentItemIndex: Int = 0 {
         didSet {
             // Update carousel control page
-            self.carouselControl.currentPage = currentItemIndex
+            segmentedProgressBar?.currentIndex = currentItemIndex
         }
     }
 
@@ -46,133 +42,192 @@ final class CarouselViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initPageViewController()
-        initCarouselControl()
+//        currentItemIndex = 0
+//        setupSegmentedProgressBar()
+//
+//        showCurrentViewController()
+//
+//        setupGestureRecognizers()
+        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print(#function)
+        currentItemIndex = 0
+        super.viewWillAppear(animated)
+        
+        setupSegmentedProgressBar()
+        
+        showCurrentViewController()
+        
+        setupGestureRecognizers()
+        
+        setUpPanGestureRecognizers()
+    }
+    
+    private func setUpPanGestureRecognizers(){
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+                view.addGestureRecognizer(panGesture)
+    }
+    
+    
+    
+    private func setupGestureRecognizers() {
+            let leftTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLeftSide(_:)))
+            let rightTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapRightSide(_:)))
+            
+            leftTapGesture.numberOfTapsRequired = 1
+            rightTapGesture.numberOfTapsRequired = 1
+            
+            // Define the left and right regions as different views
+            let leftTapView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width / 2, height: view.frame.height))
+            let rightTapView = UIView(frame: CGRect(x: view.frame.width / 2, y: 0, width: view.frame.width / 2, height: view.frame.height))
+            
+            // Set gesture recognizers to each side
+            leftTapView.addGestureRecognizer(leftTapGesture)
+            rightTapView.addGestureRecognizer(rightTapGesture)
+            
+            // Add the tap views as transparent subviews
+            leftTapView.backgroundColor = .clear
+            rightTapView.backgroundColor = .clear
+            view.addSubview(leftTapView)
+            view.addSubview(rightTapView)
+        }
+    
+    private func setupSegmentedProgressBar() {
+        // Create the SegmentedProgressBar with number of segments equal to the number of items
+        segmentedProgressBar = SegmentedProgressBar(numberOfSegments: items.count)
+        segmentedProgressBar?.delegate = self
+        
+        // Set up the frame for the progress bar
+        segmentedProgressBar?.frame = CGRect(x: 0, y: 54, width: containerView.frame.width, height: 5)
+        segmentedProgressBar?.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add the segmented progress bar as a subview
+        if let progressBar = segmentedProgressBar {
+            view.addSubview(progressBar)
+        }
+        
+//        NSLayoutConstraint.activate([
+//                segmentedProgressBar!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+//                segmentedProgressBar!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//                segmentedProgressBar!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            ])
+
+        // Start the animation for the progress bar
+        segmentedProgressBar?.startAnimation()
+    }
+    private func showCurrentViewController() {
+            if let viewController = getCurrentViewController() {
+                // Remove previous view controller
+                for child in children {
+                    child.willMove(toParent: nil)
+                    child.view.removeFromSuperview()
+                    child.removeFromParent()
+                }
+                
+                // Add new view controller
+                addChild(viewController)
+                
+                containerView.addSubview(viewController.view)
+                viewController.view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                            viewController.view.topAnchor.constraint(equalTo: containerView.topAnchor),
+                            viewController.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+                            viewController.view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                            viewController.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+                        ])
+                viewController.didMove(toParent: self)
+            }
+        }
+    private func getCurrentViewController() -> UIViewController? {
+           guard currentItemIndex < items.count else { return nil }
+           return items[currentItemIndex].getController()
+       }
     
     
     /// Initialize page view controller
-    private func initPageViewController() {
-
-        // Create pageViewController
-        pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal,
-        options: nil)
-
-        // Set up pageViewController
-        pageViewController?.dataSource = self
-        pageViewController?.delegate = self
-        pageViewController?.setViewControllers(
-            [getController(at: currentItemIndex)], direction: .forward, animated: true)
-
-        guard let theController = pageViewController else {
-            return
-        }
-        
-        // Add pageViewController in container view
-        add(asChildViewController: theController,
-            containerView: containerView)
-    }
-
+    
     /// Initialize carousel control
-    private func initCarouselControl() {
-        // Set page indicator color
-        carouselControl.currentPageIndicatorTintColor = UIColor.darkGray
-        carouselControl.pageIndicatorTintColor = UIColor.lightGray
-        
-        // Set number of pages in carousel control and current page
-        carouselControl.numberOfPages = items.count
-        carouselControl.currentPage = currentItemIndex
-        
-        // Add target for page control value change
-        carouselControl.addTarget(
-                    self,
-                    action: #selector(updateCurrentPage(sender:)),
-                    for: .valueChanged)
-    }
+    
 
     /// Update current page
     /// Parameter sender: UIPageControl
-    @objc func updateCurrentPage(sender: UIPageControl) {
-        // Get direction of page change based on current item index
-        let direction: UIPageViewController.NavigationDirection = sender.currentPage > currentItemIndex ? .forward : .reverse
-        
-        // Get controller for the page
-        let controller = getController(at: sender.currentPage)
-        
-        // Set view controller in pageViewController
-        pageViewController?.setViewControllers([controller], direction: direction, animated: true, completion: nil)
-        
-        // Update current item index
-        currentItemIndex = sender.currentPage
-    }
+    
     
     /// Get controller at index
     /// - Parameter index: Index of the controller
     /// - Returns: UIViewController
-    private func getController(at index: Int) -> UIViewController {
-        return items[index].getController()
+    @objc private func didTapLeftSide(_ sender: UITapGestureRecognizer) {
+        
+            rewindSegment()
+        }
+        
+        /// Handle tap on the right side to go to the next segment
+    @objc private func didTapRightSide(_ sender: UITapGestureRecognizer) {
+        
+            skipSegment()
+        }
+    
+    private func skipSegment() {
+            if currentItemIndex < items.count - 1 {
+//                currentItemIndex += 1
+                segmentedProgressBar?.skip()
+            }else{
+                dismiss(animated: true, completion: nil)
+            }
+        }
+        
+        /// Rewind to the previous segment using SegmentedProgressBar's rewind()
+        private func rewindSegment() {
+            if currentItemIndex > 0 {
+//                currentItemIndex -= 1
+                segmentedProgressBar?.rewind()
+            }else{
+                dismiss(animated: true, completion: nil)
+            }
+        }
+    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        let progress = translation.y / view.bounds.height
+        
+        switch gesture.state {
+        case .changed:
+            // Move the view down as per user's drag
+            if translation.y > 0 {
+                view.transform = CGAffineTransform(translationX: 0, y: translation.y)
+            }
+        case .ended:
+            // If user has dragged enough, dismiss the view controller
+            if progress > 0.3 {
+                dismiss(animated: true, completion: nil)
+            } else {
+                // Return view to its original position if the gesture isn't strong enough
+                UIView.animate(withDuration: 0.3) {
+                    self.view.transform = .identity
+                }
+            }
+        default:
+            break
+        }
     }
+    
 
 }
 
 // MARK: UIPageViewControllerDataSource methods
-extension CarouselViewController: UIPageViewControllerDataSource {
+extension CarouselViewController: SegmentedProgressBarDelegate {
     
-    /// Get previous view controller
-    /// - Parameters:
-    ///  - pageViewController: UIPageViewController
-    ///  - viewController: UIViewController
-    /// - Returns: UIViewController
-    public func pageViewController(
-        _ pageViewController: UIPageViewController,
-        viewControllerBefore viewController: UIViewController) -> UIViewController? {
-            
-            // Check if current item index is first item
-            // If yes, return last item controller
-            // Else, return previous item controller
-            if currentItemIndex == 0 {
-                return items.last?.getController()
-            }
-            return getController(at: currentItemIndex-1)
-        }
-
-    /// Get next view controller
-    /// - Parameters:
-    ///  - pageViewController: UIPageViewController
-    ///  - viewController: UIViewController
-    /// - Returns: UIViewController
-    public func pageViewController(
-        _ pageViewController: UIPageViewController,
-        viewControllerAfter viewController: UIViewController) -> UIViewController? {
-           
-            // Check if current item index is last item
-            // If yes, return first item controller
-            // Else, return next item controller
-            if currentItemIndex + 1 == items.count {
-                return items.first?.getController()
-            }
-            return getController(at: currentItemIndex + 1)
-        }
-}
-
-// MARK: UIPageViewControllerDelegate methods
-extension CarouselViewController: UIPageViewControllerDelegate {
     
-    /// Page view controller did finish animating
-    /// - Parameters:
-    /// - pageViewController: UIPageViewController
-    /// - finished: Bool
-    /// - previousViewControllers: [UIViewController]
-    /// - completed: Bool
-    public func pageViewController(
-        _ pageViewController: UIPageViewController,
-        didFinishAnimating finished: Bool,
-        previousViewControllers: [UIViewController],
-        transitionCompleted completed: Bool) {
-            if completed,
-               let visibleViewController = pageViewController.viewControllers?.first,
-               let index = items.firstIndex(where: { $0.getController() == visibleViewController }){
-                currentItemIndex = index
-            }
-        }
+    func segmentedProgressBarChangedIndex(index: Int) {
+        currentItemIndex = index
+        
+        showCurrentViewController()
+    }
+    
+    func segmentedProgressBarFinished() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
 }
