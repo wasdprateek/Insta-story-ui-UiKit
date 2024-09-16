@@ -2,17 +2,32 @@
 //  TheBoysViewController.swift
 //  Vought Showcase
 //
-//  Created by Prateek Kumar Rai on 15/09/24.
+//  Created by Prateek Kumar Rai on 14/09/24.
 //
 
 import UIKit
 
 class TheBoysViewController: UIViewController {
-
+    let fullScreenView = UIView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        fullScreenView.frame = self.view.bounds
+        self.view.addSubview(fullScreenView)
+        initCarouselView()
         // Do any additional setup after loading the view.
+    }
+    
+    private func initCarouselView() {
+        // Create a carousel item provider
+        let carouselItemProvider = CarouselItemDataSourceProvider()
+        
+        // Create carouselViewController
+        let carouselViewController = CarouselViewController(items: carouselItemProvider.items())
+        
+        // Add carousel view controller in container view
+        add(asChildViewController: carouselViewController, containerView: fullScreenView)
     }
     
 
